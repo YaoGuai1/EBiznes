@@ -103,5 +103,5 @@ drop table "CarModel";
 drop table "Engine";
 drop table "ProductComment";
 drop table "Payment";
-drop table "Order";
+drop table "UserOrder";
 drop table "OrderProduct";

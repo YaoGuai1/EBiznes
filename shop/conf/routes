@@ -6,7 +6,7 @@
 # Products
 GET     /products                                              controllers.ProductsController.getByCategoryId(categoryId: Long ?= -1)
 GET     /products/:id                                          controllers.ProductsController.getById(id: Long)
-POST    /products                                              controllers.ProductsController.create()
+POST    /categories/:categoryId/products                       controllers.ProductsController.create(categoryId: Long)
 PUT     /products/:id                                          controllers.ProductsController.update(id: Long)
 DELETE  /products/:id                                          controllers.ProductsController.delete(id: Long)
 
