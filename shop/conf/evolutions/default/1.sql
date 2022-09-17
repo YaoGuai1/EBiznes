@@ -11,32 +11,6 @@ create table "PartsManufacturer" (
                                      "description" text
 );
 
-create table "Product" (
-                           "id" integer primary key,
-                           "name" text not null,
-                           "description" text,
-                           "price" integer not null,
-                           "partsManufacturerId" integer not null,
-                           "categoryId" integer not null,
-                           foreign key(partsManufacturerId) references PartsManufacturer(id),
-                           foreign key(categoryId) references Category(id)
-);
-
-create table "User" (
-                        "id" integer primary key,
-                        "username" text not null,
-                        "password" text not null
-);
-
-create table "Promotion" (
-                             "id" integer primary key,
-                             "percentage" real not null,
-                             "fromDate" text not null,
-                             "toDate" text not null,
-                             "productId" integer not null,
-                             foreign key(productId) references Product(id)
-);
-
 create table "CarMake" (
                            "id" integer primary key,
                            "name" text not null
@@ -56,6 +30,34 @@ create table "Engine" (
                           "carModelId" integer not null,
                           foreign key(carModelId) references CarModel(id)
 );
+
+create table "Product" (
+                           "id" integer primary key,
+                           "name" text not null,
+                           "description" text,
+                           "price" integer not null,
+                           "partsManufacturerId" integer not null,
+                           "categoryId" integer not null,
+                           "carModelId" integer not null,
+                           foreign key(partsManufacturerId) references PartsManufacturer(id),
+                           foreign key(categoryId) references Category(id)
+);
+
+create table "User" (
+                        "id" integer primary key,
+                        "username" text not null,
+                        "password" text not null
+);
+
+create table "Promotion" (
+                             "id" integer primary key,
+                             "percentage" real not null,
+                             "fromDate" text not null,
+                             "toDate" text not null,
+                             "productId" integer not null,
+                             foreign key(productId) references Product(id)
+);
+
 
 create table "ProductComment" (
                                   "id" integer primary key,
@@ -95,12 +97,12 @@ create table "OrderProduct" (
 # --- !Downs
 drop table "Category";
 drop table "PartsManufacturer";
-drop table "Product";
-drop table "User";
-drop table "Promotion";
 drop table "CarMake";
 drop table "CarModel";
 drop table "Engine";
+drop table "Product";
+drop table "User";
+drop table "Promotion";
 drop table "ProductComment";
 drop table "Payment";
 drop table "UserOrder";
