@@ -13,8 +13,8 @@ export default function OrderDetails(props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const orderProducts = await fetchOrderProducts(orderId);
-            setOrderProducts(orderProducts);
+            const response  = await fetchOrderProducts(orderId);
+            setOrderProducts(response );
         };
         fetchData();
     }, [orderId]);
