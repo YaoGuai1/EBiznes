@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import UserMenu from '../UserMenu/UserMenu';
 import Order from '../Order/Order';
 import { fetchUserOrders } from '../../api/orders';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function Orders() {
+    const { userId } = useContext(UserContext);
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const orders = await fetchUserOrders(localStorage.getItem('userId'));
+            const orders = await fetchUserOrders(userId);
             setOrders(orders);
         }
         fetchData();
-    }, []);
+    }, [userId]);
 
     return (
         <>

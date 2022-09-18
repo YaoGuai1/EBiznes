@@ -43,12 +43,6 @@ create table "Product" (
                            foreign key(categoryId) references Category(id)
 );
 
-create table "User" (
-                        "id" integer primary key,
-                        "username" text not null,
-                        "password" text not null
-);
-
 create table "Promotion" (
                              "id" integer primary key,
                              "percentage" real not null,
@@ -87,7 +81,6 @@ create table "Payment" (
 
 create table "OrderProduct" (
                                  "id" integer primary key,
-                                 "quantity" integer not null,
                                  "orderId" integer not null,
                                  "productId" integer not null,
                                  foreign key(orderId) references UserOrder(id),
@@ -101,7 +94,6 @@ drop table "CarMake";
 drop table "CarModel";
 drop table "Engine";
 drop table "Product";
-drop table "User";
 drop table "Promotion";
 drop table "ProductComment";
 drop table "Payment";

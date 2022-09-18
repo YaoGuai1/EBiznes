@@ -19,8 +19,9 @@ class OrdersController @Inject()(cc: MessagesControllerComponents, val orderRepo
         Future.successful(BadRequest(Json.obj("message" -> JsError.toJson(errors))))
       },
       order => {
-        orderRepository.create(order.date.toString, userId, -1)
-        userRepository.getById(userId).map(user => Ok(Json.obj("message" -> (s"Order for user ${user.username} created"))))
+        orderRepository.create(order.date.toString, userId, -1).flatMap(createdOrder => {
+          userRepository.getById(userId).map(user => Ok(Json.obj("message" -> (s"Order for user ${user.email} created"), "orderId" -> createdOrder.id)))
+        })
       }
     )
   }
@@ -57,11 +58,11 @@ class OrdersController @Inject()(cc: MessagesControllerComponents, val orderRepo
   }
 
   def createForm(): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userRepository.getAll().map(users => Ok(views.html.orders.orderAdd(OrderForms.CreateForm, users)))
+    userRepository.getAll.map(users => Ok(views.html.orders.orderAdd(OrderForms.CreateForm, users)))
   }
 
   def createFormHandle(): Action[AnyContent] = Action.async { implicit request =>
-    userRepository.getAll().flatMap(users => {
+    userRepository.getAll.flatMap(users => {
       OrderForms.CreateForm.bindFromRequest.fold(
         errorForm => {
           Future.successful(BadRequest(views.html.orders.orderAdd(errorForm, users)))

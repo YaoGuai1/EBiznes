@@ -1,6 +1,6 @@
 const fetchCategories = async () => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/categories`);
-    return await response.json();
+    return response.json();
 }
 
 const fetchCategoryById = async (id) => {

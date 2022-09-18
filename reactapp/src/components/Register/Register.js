@@ -1,39 +1,39 @@
-import React from 'react';
-import { createUser } from '../../api/users';
+import React, { useState } from 'react';
+import { signUp } from '../../api/authentication';
 import './Register.css';
 
-export default class Register extends React.Component {
-    constructor(props) {
-        super(props);
+export default function Register(props) {
+    const [inputEmail, setInputEmail] = useState('');
+    const [inputPassword, setInputPassword] = useState('');
 
-        this.handleRegister = this.handleRegister.bind(this);
-        this.handleInputChagne = this.handleInputChange.bind(this);
-        this.state = { username: '', password: '' };
-    }
 
-    handleRegister = async () => {
-        if (this.state.password.length < 8) {
+    const handleRegister = async () => {
+        if (inputPassword.length < 8) {
             alert('Hasło musi mieć co najmniej 8 znaków');
             return;
         }
 
-        const response = await createUser(this.state);
-        alert(response.message);
-        this.setState({ username: '', password: '' });
-    }
+        const user = {
+            email: inputEmail,
+            password: inputPassword
+        };
+        const response = await signUp(user);
+        if (response.status === 201)
+            alert('Użytkownik został poprawnie zarejestrowany');
+        else
+            alert('Użytkownik o podanym adresie email już istnieje');
+        setInputEmail('');
+        setInputPassword('');
+    };
 
-    handleInputChange = (event) => this.setState({ [event.target.name]: event.target.value });
-
-    render() {
-        return (
-            <div className='register panel'>
-                <h1>Rejestracja</h1>
-                <label htmlFor='username'>Nazwa użytkownika</label>
-                <input type='text' id='username' name='username' value={this.state.username} onChange={this.handleInputChange} />
-                <label htmlFor='password'>Hasło</label>
-                <input type='password' id='password' name='password' value={this.state.password} onChange={this.handleInputChange} />
-                <button type='submit' onClick={this.handleRegister}>Zarejestruj się</button>
-            </div>
-        );
-    }
+    return (
+        <div className='register panel'>
+            <h1>Rejestracja</h1>
+            <label htmlFor='email'>Email</label>
+            <input type='text' id='email' name='email' value={inputEmail} onChange={e => setInputEmail(e.target.value)} />
+            <label htmlFor='password'>Hasło</label>
+            <input type='password' id='password' name='password' value={inputPassword} onChange={e => setInputPassword(e.target.value)} />
+            <button type='submit' onClick={handleRegister}>Zarejestruj się</button>
+        </div>
+    );
 }

@@ -8,54 +8,79 @@ import Promotions from './components/Promotions/Promotions';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import UserDashboard from './components/UserDashboard/UserDashboard';
 import Orders from './components/Orders/Orders';
+import OrderDetails from './components/OrderDetails/OrderDetails';
+import Cart from './components/Cart/Cart';
+
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import React from 'react';
+import CarContextProvider from './contexts/CarContext';
+import ProductsContextProvider from './contexts/ProductsContext';
+import PromotionsContextProvider from './contexts/PromotionsContext';
+import { CartContext } from './contexts/CartContext';
+import { UserContext } from './contexts/UserContext';
+import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 import './App.css';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+export default function App(props) {
+    const [authenticated, setAuthenticated] = useState(Cookies.get('csrfToken') === undefined ? false : true);
+    const [userId, setUserId] = useState(Cookies.get('user') === undefined ? 0 : parseInt(Cookies.get('user')));
+    const [cart, setCart] = useState([]);
+    const addProduct = (product) => setCart([...cart, product]);
+    const removeProduct = (id) => {
+        const productToRemoveIndex = cart.findIndex(product => product.id === id);
+        if (productToRemoveIndex > -1) {
+            const newCart = [...cart];
+            newCart.splice(productToRemoveIndex, 1);
+            setCart(newCart);
+        }
+    };
 
-    this.handleLoggedIn = this.handleLoggedIn.bind(this);
-    this.state = { IsLoggedIn: false };
-  }
-
-  handleLoggedIn = (isLoggedIn) => {
-    this.setState({ IsLoggedIn: isLoggedIn });
-  }
-
-  render() {
     return (
-        <BrowserRouter>
-          <NavigationBar isLoggedIn={this.state.IsLoggedIn} />
-          <Route exact path='/'>
-            <Home />
-          </Route>
-          <Route path='/register'>
-            <Register />
-          </Route>
-          <Route path='/login'>
-            { !this.state.IsLoggedIn ? <Login handleLoggedIn={this.handleLoggedIn} isLoggedIn={this.state.IsLoggedIn} /> : <Redirect to='/dashboard' /> }
-          </Route>
-          <Route path='/shop'>
-            <Products />
-          </Route>
-          <Route path='/product-details/:productId'>
-            <ProductDetails />
-          </Route>
-          <Route path='/parts-manufacturers'>
-            <PartsManufacturers />
-          </Route>
-          <Route path='/promotions'>
-            <Promotions />
-          </Route>
-          <Route path='/dashboard'>
-            { this.state.IsLoggedIn ? <UserDashboard handleLoggedIn={this.handleLoggedIn} isLoggedIn={this.state.IsLoggedIn} /> : <Redirect to='/login' /> }
-          </Route>
-          <Route path='/orders'>
-            { this.state.IsLoggedIn ? <Orders /> : <Redirect to='/login' /> }
-          </Route>
-        </BrowserRouter>
+        <CarContextProvider>
+            <ProductsContextProvider>
+                <UserContext.Provider value={{ authenticated, userId, setAuthenticated, setUserId }}>
+                    <CartContext.Provider value={{ cart, setCart, addProduct, removeProduct }}>
+                        <BrowserRouter>
+                            <NavigationBar />
+                            <Route exact path='/'>
+                                <Home />
+                            </Route>
+                            <Route path='/register'>
+                                <Register />
+                            </Route>
+                            <Route path='/login'>
+                                { !authenticated ? <Login /> : <Redirect to='/dashboard' /> }
+                            </Route>
+                            <Route path='/shop'>
+                                <Products />
+                            </Route>
+                            <Route path='/product-details/:productId'>
+                                <ProductDetails />
+                            </Route>
+                            <Route path='/parts-manufacturers'>
+                                <PartsManufacturers />
+                            </Route>
+                            <Route path='/promotions'>
+                                <PromotionsContextProvider>
+                                    <Promotions />
+                                </PromotionsContextProvider>
+                            </Route>
+                            <Route path='/dashboard'>
+                                { authenticated ? <UserDashboard /> : <Redirect to='/login' /> }
+                            </Route>
+                            <Route path='/orders'>
+                                { authenticated ? <Orders /> : <Redirect to='/login' /> }
+                            </Route>
+                            <Route path='/order-details/:orderId'>
+                                { authenticated ? <OrderDetails /> : <Redirect to='/login' /> }
+                            </Route>
+                            <Route path='/cart'>
+                                <Cart />
+                            </Route>
+                        </BrowserRouter>
+                    </CartContext.Provider>
+                </UserContext.Provider>
+            </ProductsContextProvider>
+        </CarContextProvider>
     );
-  }
 }
