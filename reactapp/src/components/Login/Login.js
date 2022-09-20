@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { signIn } from '../../api/authentication';
 import { UserContext } from '../../contexts/UserContext';
-import Cookies from 'js-cookie';
 
 export default function Login(props) {
     const { authenticated, setAuthenticated, setUserId } = useContext(UserContext);
@@ -23,7 +22,12 @@ export default function Login(props) {
         if (response.status === 200) {
             alert('Zalogowano');
             setAuthenticated(true);
-            setUserId(parseInt(Cookies.get('user')));
+            if (response.headers.get('csrfToken') !== null)
+                sessionStorage.setItem('csrfToken', response.headers.get('csrfToken'));
+            if (response.headers.get('userId') !== null) {
+                sessionStorage.setItem('userId', response.headers.get('userId'));
+                setUserId(parseInt(response.headers.get('userId')));
+            }
         }
         else {
             alert('Nieprawidłowe dane logowania');
@@ -31,7 +35,7 @@ export default function Login(props) {
     };
 
     const navigateTo = (url) => {
-        window.location.assign("http://localhost:9000" + url);
+        window.location.assign(`${process.env.REACT_APP_API_URL}` + url);
     };
 
     if (!authenticated)

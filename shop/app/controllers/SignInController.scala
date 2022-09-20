@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.util.Credentials
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import controllers.request.SignInRequest
+import play.api.mvc.Cookie.SameSite
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import play.filters.csrf.CSRF.Token
@@ -25,7 +26,11 @@ class SignInController @Inject()(scc: DefaultSilhouetteControllerComponents, add
       userRepository.retrieve(loginInfo).flatMap {
         case Some(user) =>
           authenticateUser(user)
-            .map(_.withCookies(Cookie(name, value, httpOnly = false), Cookie("user", user.id.toString, httpOnly = false)))
+            .map(_.withCookies(Cookie(name, value, httpOnly = false, secure = true, sameSite = Option.apply(SameSite.None)), Cookie("user", user.id.toString, httpOnly = false, secure = true, sameSite = Option.apply(SameSite.None)))
+              .withHeaders(
+                ("Access-Control-Expose-Headers", "csrfToken, userId"),
+                ("csrfToken", CSRF.getToken.get.value),
+                ("userId", user.id.toString)))
         case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
       }
     }.recover {
