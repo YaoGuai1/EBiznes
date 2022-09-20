@@ -48,4 +48,4 @@ jobs:
         app-name: 'shopbackend'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3bdf868b44034b09a1903342f971c66c }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_3b275d11cbe6464ca835017567748e42 }}/rafalkuzma1/ebiznesbacked:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_3b275d11cbe6464ca835017567748e42 }}/ebiznesbacked:${{ github.sha }}'
