@@ -21,6 +21,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B
 RUN apt-get update && apt-get install -y sbt
 
 EXPOSE 3000
+EXPOSE 8080
 EXPOSE 9000
 
 RUN useradd -ms /bin/bash rafalkuzma 
