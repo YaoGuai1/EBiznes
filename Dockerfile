@@ -29,5 +29,9 @@ RUN usermod -aG sudo rafalkuzma
 USER rafalkuzma 
 WORKDIR /home/rafalkuzma/
 
-RUN mkdir /home/rafalkuzma/ebiznes/
-VOLUME ["/home/rafalkuzma/ebiznes/"]
+RUN git clone https://github.com/YaoGuai1/Ebiznes.git
+WORKDIR /home/rafalkuzma/Ebiznes/reactapp
+
+RUN npm install
+
+CMD npm run 

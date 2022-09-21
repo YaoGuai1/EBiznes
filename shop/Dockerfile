@@ -27,8 +27,8 @@ USER rafalkuzma
 WORKDIR /home/rafalkuzma/
 
 RUN git clone https://github.com/YaoGuai1/Ebiznes.git
-WORKDIR /home/rafalkuzma/ebiznes/shop
+WORKDIR /home/rafalkuzma/Ebiznes/shop
 
 RUN sbt compile 
 
-CMD sbt run
+CMD sbt run 
