@@ -11,6 +11,7 @@ export default function UserDashboard(props) {
         await signOut();
         setAuthenticated(false);
         setUserId(0);
+        sessionStorage.clear();
     }
 
     return (

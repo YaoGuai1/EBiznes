@@ -33,7 +33,8 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, val 
     def partsManufacturerFK = foreignKey("partsManufacturer_FK", partsManufacturerId, partsManufacturer)(_.id, onUpdate=ForeignKeyAction.Cascade, onDelete=ForeignKeyAction.SetNull)
     def categoryFK = foreignKey("category_FK", categoryId, category)(_.id, onUpdate=ForeignKeyAction.Cascade, onDelete=ForeignKeyAction.SetNull)
     def carModelFK = foreignKey("carModel_FK", carModelId, carModel)(_.id, onUpdate=ForeignKeyAction.Cascade, onDelete=ForeignKeyAction.SetNull)
-    def * = (id, name, description, price, partsManufacturerId, categoryId, carModelId) <> ((Product.apply _).tupled, Product.unapply)  }
+    def * = (id, name, description, price, partsManufacturerId, categoryId, carModelId) <> ((Product.apply _).tupled, Product.unapply)
+  }
 
   def create(name: String, description: String, price: BigDecimal, partsManufacturerId: Long, categoryId: Long, carModelId: Long): Future[Product] = db.run {
     (product.map(p => (p.name, p.description, p.price, p.partsManufacturerId, p.categoryId, p.carModelId))
