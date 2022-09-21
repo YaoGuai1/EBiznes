@@ -35,4 +35,4 @@ WORKDIR /home/rafalkuzma/Ebiznes/reactapp
 
 RUN npm install
 
-CMD npm run 
+CMD npm start 
