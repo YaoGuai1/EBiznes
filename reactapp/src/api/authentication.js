@@ -2,7 +2,7 @@ const signIn = async (data) => {
     return fetch(`${process.env.REACT_APP_API_URL}/signIn`, {
         method: 'POST',
         mode: 'cors',
-        credentials: 'include',
+        credentials: 'true',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
@@ -11,7 +11,7 @@ const signIn = async (data) => {
 const signOut = async () => {
     return fetch(`${process.env.REACT_APP_API_URL}/signOut`, {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'true',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Csrf-Token': sessionStorage.getItem('csrfToken')
